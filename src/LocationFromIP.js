@@ -11,12 +11,18 @@ export class LocationFromIP extends LitElement {
     super();
     this.UserIpInstance = new UserIP();
     this.locationEndpoint = 'https://freegeoip.app/json/';
-    this.long = 10.305385;
-    this.lat = 77.923029;
+    // if I put null instead of "" then it just doesn't update any longitude or latitude
+    // but "" gives me Mount Nittany??? which is close to my long/lat but not correct at all
+    this.long = '';
+    this.lat = '';
   }
 
   static get properties() {
-    return {};
+    return {
+      // had the type as number but for some reason it just doesn't work, but gives me something when it's string
+      latitude: { type: String, reflect: true },
+      longitude: { type: String, reflect: true },
+    };
   }
 
   firstUpdated(changedProperties) {
@@ -38,6 +44,8 @@ export class LocationFromIP extends LitElement {
       })
       .then(data => {
         console.log(data);
+        this.lat = data.latitude;
+        this.long = data.longitude;
         return data;
       });
   }
